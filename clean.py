@@ -54,23 +54,24 @@ cleanup_routines = [
     "delete-s3-buckets",
     "delete-ec2",
 ]
-accounts.append(helpers.this_account())
+accounts.append(helpers.this_account(session))
 
 for id in accounts:
     for _ in regions:
         session = helpers.get_session(region_name=_)
         logger.info(f"Cleaning up account={id} in region={_} using Custodian.")
-        credentials = helpers.assume_org_admin(session, id, role_name=args.assume_role)
-        logger.info(f"Successfully assumed role for {id} in region={_}")
+        if id != helpers.this_account(session):
+            credentials = helpers.assume_org_admin(session, id, role_name=args.assume_role)
+            logger.info(f"Successfully assumed role for {id} in region={_}")
 
-        aki = credentials["Credentials"]["AccessKeyId"]
-        ask = credentials["Credentials"]["SecretAccessKey"]
-        ast = credentials["Credentials"]["SessionToken"]
+            aki = credentials["Credentials"]["AccessKeyId"]
+            ask = credentials["Credentials"]["SecretAccessKey"]
+            ast = credentials["Credentials"]["SessionToken"]
         for routine in cleanup_routines:
             logger.info(f"Running cleanup_routine={routine} in account_id={id}")
             environ = os.environ.copy()
 
-            if id != helpers.this_account():
+            if id != helpers.this_account(session):
                 environ["AWS_ACCESS_KEY_ID"] = f"{aki}"
                 environ["AWS_SECRET_ACCESS_KEY"] = f"{ask}"
                 environ["AWS_SESSION_TOKEN"] = f"{ast}"

@@ -36,3 +36,9 @@ Otherwise please file a github issue with the error output of the script and it 
 Keep an eye on your AWS Bill for a few days.  It should be near zero or pennies per month to simply keep the lab around.
 Alternatively you can follow the [account closure process]('https://aws.amazon.com/premiumsupport/knowledge-center/close-aws-account/'). You will need to do this
 for every subordinate account in your organization INDIVIDUALLY by first resetting the root password using the e-mail you created for that.
+
+## What did it do?
+
+This script deleted all StackSets in the root account then proceeded to remove resources in the OrganizationAccounts for production and security.
+You may want to double check the work. There should be no s3 buckets, no AMIs, no EBS snapshots, no running instances, and no Cloudformation Stacks left (aside from IAM).
+It will also cleanup any lambda functions left behind from security automation tinkering.

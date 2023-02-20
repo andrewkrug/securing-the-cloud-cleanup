@@ -1,0 +1,8 @@
+policies:
+  - name: lambda-delete-untagged-functions
+    resource: lambda
+    filters:
+      - "tag:long-running": absent
+      - "tag:custodian-info": absent
+    actions:
+      - delete

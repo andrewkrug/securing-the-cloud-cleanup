@@ -1,0 +1,13 @@
+policies:
+  - name: cloudwatch-delete-stale-log-group
+    resource: log-group
+    filters:
+      - type: last-write
+        days: 1
+    actions:
+      - delete
+  - name: cloudwatch-set-log-group-retention
+    resource: log-group
+    actions:
+      - type: retention
+        days: 1

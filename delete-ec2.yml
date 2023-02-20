@@ -1,0 +1,14 @@
+policies:
+  - name: terminate-ec2-without-tag
+    resource: ec2
+    filters:
+      - "tag:long-running": absent
+    actions:
+      - terminate
+  - name: ami-unused-recently
+    resource: ami
+    filters:
+      - type: image-age
+        days: 1
+    actions:
+      - deregister

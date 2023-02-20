@@ -1,0 +1,8 @@
+policies:
+  - name: delete-buckets-without-tags
+    resource: s3
+    filters:
+      - "tag:retain": absent
+    actions:
+      - type: delete
+        remove-contents: true
